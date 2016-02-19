@@ -29,6 +29,8 @@ SLACK_RUBY_BOT_SEND_GIFS = false
 # Thanks/Aknowledgements
 Thanks to [slack-ruby-bot](https://github.com/dblock/slack-ruby-bot) and it's developers/contributors for the heavy lifting regarding the bot's connection to Slack and first configuration.
 
+Cards sourced from [nodanaonlyzuul/against-humanity](https://github.com/nodanaonlyzuul/against-humanity) and [samurailink3/hangouts-against-humanity](https://github.com/samurailink3/hangouts-against-humanity/wiki/Cards)
+
 # Not complete
 This is still a work in progress and is my first public for consumption repository.
 
