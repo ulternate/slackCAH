@@ -29,5 +29,10 @@ SLACK_RUBY_BOT_SEND_GIFS = false
 # Thanks/Aknowledgements
 Thanks to [slack-ruby-bot](https://github.com/dblock/slack-ruby-bot) and it's developers/contributors for the heavy lifting regarding the bot's connection to Slack and first configuration.
 
-# Updates
-This is currently a work in progress so commands might change/break willy nilly. I'm sporadically working on it and hope to have something up here soon.
+# Not complete
+This is still a work in progress and is my first public for consumption repository.
+
+# License
+Copyright (c) 2016 [Daniel Swain](http://www.danielcswain.com)
+
+This project is licensed under the [MIT License](LICENSE.md).
