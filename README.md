@@ -51,10 +51,11 @@ Thanks to [slack-ruby-bot](https://github.com/dblock/slack-ruby-bot) and it's de
 
 Cards sourced from [nodanaonlyzuul/against-humanity](https://github.com/nodanaonlyzuul/against-humanity) and [samurailink3/hangouts-against-humanity](https://github.com/samurailink3/hangouts-against-humanity/wiki/Cards)
 
-# Not complete
-This is still a work in progress and is my first public for consumption repository.
 
 # License
 Copyright (c) 2016 [Daniel Swain](http://www.danielcswain.com)
 
 This project is licensed under the [MIT License](LICENSE.md).
+
+# Warning :)
+This is still a work in progress and is my first public for consumption repository, there will likely be bugs.
