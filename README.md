@@ -1,5 +1,5 @@
 # slackCAH
-Play Cards Against Humanity in a Slack channel using slack-ruby-bot
+Play Cards Against Humanity in a Slack channel using [slack-ruby-bot](https://github.com/dblock/slack-ruby-bot)
 
 # About
 Play Cards Against Humanity in slack to a public or private channel.
@@ -13,17 +13,37 @@ Play Cards Against Humanity in slack to a public or private channel.
   * Points are attributed to determine who wins overall
 
 # Configuration
-Follow the guide from the slack-ruby-bot main page for [development](https://github.com/dblock/slack-ruby-bot/blob/master/TUTORIAL.md) or [deployment to Heroku](https://github.com/dblock/slack-ruby-bot/blob/master/DEPLOYMENT.md).
+The Slack-ruby-bot page has some great guides for setting up a simple bot for [development](https://github.com/dblock/slack-ruby-bot/blob/master/TUTORIAL.md) and [deployment to Heroku](https://github.com/dblock/slack-ruby-bot/blob/master/DEPLOYMENT.md).
 
+The following settings are also required to get this bot running.
 
-## Env
-The .env file created in the above [tutorial](https://github.com/dblock/slack-ruby-bot/blob/master/TUTORIAL.md) requires the following additions:
+#### Development
+
+To get slackCAH running for testing add the following to your .env file created in the development [tutorial](https://github.com/dblock/slack-ruby-bot/blob/master/TUTORIAL.md) above
 ```
 GAME_BOARD_NAME = name_of_game_board
 BOT_NAME = name_of_bot
 
 #Set the following to false if you don't want gif's from Slack-ruby-bot
 SLACK_RUBY_BOT_SEND_GIFS = false
+```
+
+#### Deployment (Heroku)
+
+I found I had to make the following additions from the base [slack-ruby-bot](https://github.com/dblock/slack-ruby-bot) [deployment guide](https://github.com/dblock/slack-ruby-bot/blob/master/DEPLOYMENT.md):
+
+##### Procfile
+I had changed $PORT to a dedicated port for testing. Heroku will assign a port to the $PORT tag when your bot runs with puma. So change it back to $PORT before deployment.
+```
+web: bundle exec puma -p $PORT
+```
+
+##### Heroku config
+The following additional config variables are required for Heroku (in addition to your SLACK_API_TOKEN)
+```
+heroku config:add GAME_BOARD_NAME=-your-boards-name
+heroku config:add BOT_NAME=your-bots-name
+heroku config:add SLACK_RUBY_BOT_SEND_GIFS=false
 ```
 
 # Thanks/Aknowledgements
