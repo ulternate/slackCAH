@@ -27,8 +27,8 @@ module SlackCAHBot
                 showPlayed: "Show the final hands played by all players, useful if you've forgotten and need to pick a winner.",
                 scores: "Show the current scores for all players. No arguments are expected.",
                 winner: "Select the winning hand. This option will only work if the user is the current card czar. The following format is expected: ```#{@@wipbot_id} winner 0```",
-                reset: "Restart the game with a new hand. Takes same arguments as 'start'.",
-                status: "See who we're wating on to play their hand.",
+                reset: "Reset the card decks and clear player hands. A call to 'start' is required to start again.",
+                status: "See who we're waiting on to play their hand.",
                 quit: "Quit the current game."
             }
 
@@ -36,7 +36,7 @@ module SlackCAHBot
             command 'help' do |client, data|
                 #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                 @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                 client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                 client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -48,7 +48,7 @@ module SlackCAHBot
 
             #Start a game of Cards Against Humanity
             #start requires addition data info like the users playing
-            #If that is missing send an error to the msgbrd.
+            #If that is missing send an error to the message board.
             command 'start' do |client, data|
                 if @@game_in_progress
                     #don't allow this call if the game is in progress.
@@ -58,7 +58,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -214,7 +214,7 @@ module SlackCAHBot
                                     message += "\nTo select the winning hand enter *#{@@wipbot_id} winner n* where 'n' is the hand number as listed."
                                     client.say(channel: @@game_board, text: message)
 
-                                    #Send the mesage to the DM of the card_czar
+                                    #Send the message to the DM of the card_czar
                                     client.web_client.im_open(
                                         "user": "#{@@current_players[@@card_czar].gsub(/[@<>]/,'')}"
                                     )
@@ -231,7 +231,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -239,7 +239,6 @@ module SlackCAHBot
                     client.say(channel: data.channel, text: "There isn't a game in progress, call *#{@@wipbot_id} help* for a reminder of the bot commands.")
                 end
             end
-
 
             #For each of the player_hands. If the user who requested it
             # has a hand then show it on their DM feed.
@@ -265,7 +264,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -281,7 +280,36 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
+                    client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
+                    client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
+
+                    #No game is in progress, tell the player
+                    client.say(channel: data.channel, text: "There isn't a game in progress, call *#{@@wipbot_id} help* for a reminder of the bot commands.")
+                end
+            end
+
+            #Show the played hands
+            command 'showPlayed' do |client, data|
+                if @@game_in_progress
+                    #If we're waiting on the users hands then I won't post the played hands
+                    waiting = false
+                    @@users_status.each { |user, status| waiting = true if !status }
+                    if waiting
+                        message = "We're still waiting on some hands before you can see the hands played by everyone this round."
+                    else
+                        message = "Here are the hands played for:\n ```#{@@last_question}``` \n Call *#{@@wipbot_id} winner n* to select the best hand."
+                        count = 0
+                        @@current_answers.each do |k, v|
+                            message += "\nHand number #{count}:\n #{v}"
+                            count += 1
+                        end
+                        client.say(channel: data.channel, text: message)
+                    end
+                else
+                    #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
+                    @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -299,7 +327,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -368,7 +396,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -404,7 +432,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -469,36 +497,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
-                    client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
-                    client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
-
-                    #No game is in progress, tell the player
-                    client.say(channel: data.channel, text: "There isn't a game in progress, call *#{@@wipbot_id} help* for a reminder of the bot commands.")
-                end
-            end
-
-            #Show the played hands
-            command 'showPlayed' do |client, data|
-                if @@game_in_progress
-                    #If we're waiting on the users hands then I won't post the played hands
-                    waiting = false
-                    @@users_status.each { |user, status| waiting = true if !status }
-                    if waiting
-                        message = "We're still waiting on some hands before you can see the hands played by everyone this round."
-                    else
-                        message = "Here are the hands played for:\n ```#{@@last_question}``` \n Call *#{@@wipbot_id} winner n* to select the best hand."
-                        count = 0
-                        @@current_answers.each do |k, v|
-                            message += "\nHand number #{count}:\n #{v}"
-                            count += 1
-                        end
-                        client.say(channel: data.channel, text: message)
-                    end
-                else
-                    #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
-                    @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
@@ -527,7 +526,7 @@ module SlackCAHBot
                 else
                     #Update the @@wipbot_id to contain the User_ID not the string from the .env file. Only if the id = the one in the ENV file
                     @@wipbot_id = "<@#{client.web_client.auth_test()["user_id"]}>" if @@wipbot_id == ENV['BOT_NAME']
-                    # Grab the gameboard from the slack team using the board name (either public [channel] or private [group] )
+                    # Grab the game board from the slack team using the board name (either public [channel] or private [group] )
                     client.web_client.channels_list()["channels"].each{ |chn| @@game_board = chn["id"] if chn["name"] == ENV['GAME_BOARD_NAME'] }
                     client.web_client.groups_list()["groups"].each{ |grp| @@game_board = grp["id"] if grp["name"] == ENV['GAME_BOARD_NAME'] }
 
