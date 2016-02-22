@@ -297,6 +297,7 @@ module SlackCAHBot
                     @@users_status.each { |user, status| waiting = true if !status }
                     if waiting
                         message = "We're still waiting on some hands before you can see the hands played by everyone this round."
+                        client.say(channel: data.channel, text: message)
                     else
                         message = "Here are the hands played for:\n ```#{@@last_question}``` \n Call *#{@@wipbot_id} winner n* to select the best hand."
                         count = 0
