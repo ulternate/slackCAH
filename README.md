@@ -76,5 +76,3 @@ Copyright (c) 2016 [Daniel Swain](http://www.danielcswain.com)
 
 This project is licensed under the [MIT License](LICENSE.md).
 
-# Warning :)
-This is still a work in progress and is my first public for consumption repository, there will likely be bugs.
