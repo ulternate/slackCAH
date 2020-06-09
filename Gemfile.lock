@@ -38,7 +38,7 @@ GEM
     minitest (5.8.4)
     multipart-post (2.0.0)
     oj (2.14.4)
-    puma (3.12.4)
+    puma (3.12.6)
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
